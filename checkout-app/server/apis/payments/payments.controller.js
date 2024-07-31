@@ -1,7 +1,7 @@
 const paymentsModel = require("./payments.model");
 const axios = require("axios");
 const config = require("../../../config");
-const stripe = require('stripe')('sk_test_51PXRUjJoQl4SAJZlHaRIXePOaqwABE0m8OLvtOEPeb20aoHIQS8D7LHBS2ifLmVBvvHQNOWid14s3OViKFwifLqj00fdBQt7dn');
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 function gen(dt) {
     return {
