@@ -1,0 +1,23 @@
+.lobster-regular {
+    font-family: "Lobster", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .max-lines {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /* white-space: nowrap; */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  
+  .max-lines-head {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /* white-space: nowrap; */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }

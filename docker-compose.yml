@@ -1,0 +1,83 @@
+version: '3.1'
+
+services:
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo
+    restart: always
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27018:27017"
+  web:
+    image: nginx
+    volumes:
+    - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+    - "8080:80"
+  
+  # mongo-express:
+  #   image: mongo-express
+  #   restart: always
+  #   ports:
+  #     - 8081:8081
+  #   environment:
+  #     ME_CONFIG_MONGODB_ADMINUSERNAME: root
+  #     ME_CONFIG_MONGODB_ADMINPASSWORD: root
+  #     ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
+  #     ME_CONFIG_BASICAUTH: true
+
+  products-app:
+    build: ./products-app
+    environment:
+      - PORT=1212
+      - MONGO_URL=mongodb://mongo:27017/productsapp
+      - USER_SERVICE=http://host.docker.internal:1414/
+    ports:
+      - "1212:1212"
+
+  users-app:
+    build: ./users-app
+    environment:
+      - PORT=1414
+      - MONGO_URL=mongodb://mongo:27017/userssapp
+    ports:
+      - "1414:1414"
+
+  cart-app:
+    build: ./cart-app
+    environment:
+      - PORT=1515
+      - MONGO_URL=mongodb://mongo:27017/cartapp
+      - USER_SERVICE=http://host.docker.internal:1414/
+      - PRODUCTS_SERVICE=http://host.docker.internal:1212/
+    ports:
+      - "1515:1515"
+
+  checkout-app:
+    build: ./checkout-app
+    environment:
+      - PORT=1616
+      - MONGO_URL=mongodb://mongo:27017/paymentsapp
+      - USER_SERVICE=http://host.docker.internal:1414/
+      - PRODUCTS_SERVICE=http://host.docker.internal:1212/
+      - CART_SERVICE=http://host.docker.internal:1515/
+      - CANCEL=http://localhost:3003/cart
+      - SUCCESS=http://localhost:3003/cart/success
+      - STRIPE_KEY= REPLACE
+      - STRIPE_SECRET= REPLACE
+    ports:
+      - "1616:1616"
+
+  frontend:
+    build: ./frontend
+    # environment:
+    ports:
+      - "3003:3003"
